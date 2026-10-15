@@ -1,0 +1,6 @@
+board:
+  name: custom_board_scratch
+  full_name: custom_board_scratch
+  vendor: custom_board_company
+  socs:
+    - name: stm32f407xx
