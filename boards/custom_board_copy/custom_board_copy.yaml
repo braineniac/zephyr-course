@@ -1,0 +1,13 @@
+identifier: custom_board_copy
+name: custom_board_copy
+type: mcu
+arch: arm
+toolchain:
+  - zephyr
+  - gnuarmemb
+ram: 128
+flash: 1024
+supported:
+  - counter
+  - usb_device
+vendor: custom_board_company
