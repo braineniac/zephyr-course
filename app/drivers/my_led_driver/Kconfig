@@ -1,0 +1,3 @@
+config MY_LED_DRIVER
+    bool "My LED driver"
+    default y

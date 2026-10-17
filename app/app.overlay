@@ -1,5 +1,10 @@
 / {
-	aliases {
-		app-led = &green_led_1;
+	my_led_dev0: my_led_dev0 {
+		compatible = "my,led_driver";
+		status = "okay";
+	};
+	my_led_dev1: my_led_dev1 {
+		compatible = "my,led_driver";
+		status = "okay";
 	};
 };
