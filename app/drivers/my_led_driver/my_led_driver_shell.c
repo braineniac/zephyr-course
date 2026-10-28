@@ -25,26 +25,30 @@ static int info_handler(const struct shell *sh, size_t argc, char **argv) {
     return 0;
 }
 
-static int set_handler(const struct shell *sh, size_t argc, char **argv) {
-
-    int conv_err_ptr = 0;
-    int wait = shell_strtoul(argv[1], 10, &conv_err_ptr);
-
-    if ((argc != 2) || (conv_err_ptr != 0) || (wait > 1000)) {
-        shell_error(sh, "Argument missing or out of range!");
-        return -1;
+static int set_handler(const struct shell *sh, size_t argc, char **argv)
+{
+    if (argc != 2) {
+        shell_error(sh, "Argument missing!");
+        return -EINVAL;
     }
 
-    const struct device* dev = DEVICE_DT_GET(DT_NODELABEL(my_led_dev0));
-    my_led_driver_set_wait(dev, wait);
-    return 0;
+    int conv_err = 0;
+    unsigned long wait = shell_strtoul(argv[1], 10, &conv_err);
+
+    if (conv_err != 0 || wait < 1 || wait > 1000) {
+        shell_error(sh, "Wait must be between 1 and 1000 ms!");
+        return -EINVAL;
+    }
+
+    const struct device *dev = DEVICE_DT_GET(DT_NODELABEL(my_led_dev0));
+    return my_led_driver_set_wait(dev, wait);
 }
 
 SHELL_STATIC_SUBCMD_SET_CREATE(sub_sensor,
     SHELL_CMD(fetch, NULL, "Calls sensor_sample_fetch()", fetch_handler),
     SHELL_CMD(read, NULL, "Calls sensor_channel_get() and prints the result", read_handler),
     SHELL_CMD(info, NULL, "Prints device name and ready state", info_handler),
-    SHELL_CMD_ARG(set, NULL, "Sets wait time in ms(0-1000)", set_handler, 2, 0),
+    SHELL_CMD_ARG(set, NULL, "Sets wait time in ms(1-1000)", set_handler, 2, 0),
     SHELL_SUBCMD_SET_END
 );
 
